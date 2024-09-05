@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Hello World!</title>
+  <link rel="stylesheet" href="index.css" />
+</head>
+
+<body>
+  <h1>Chatbot</h1>
+
+  <div class="chatbot_container">
+    <input type="text" id="message-input" placeholder="type your message">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <div class="chats">
+    <div id="message-output"></div>
+  </div>
+
+
+  <script>
+    async function sendMessage() {
+      const message = document.getElementById('message-input').value;
+      console.log('message', message)
+      if (!message) {
+        alert('please enter a message')
+        return
+      }
+
+      try {
+        let response = await fetch(`http://127.0.0.1:8000/chatbot/?message=${encodeURIComponent(message)}`)
+        console.log('response', response)
+        let data = await response.json()
+        console.log('data', data)
+        document.getElementById('message-output').innerHTML += `<p class="user-message"><strong><You: /strong>${message}</p>`
+        document.getElementById('message-output').innerHTML += `<p class="bot-message"><strong><Bot: /strong>${data.response}</p>`
+          document.getElementById('message-input').value = '';
+
+      } catch (error) {
+      alert('error in fetching response from bot')
+      }
+    }
+
+
+  </script>
+</body>
+
+</html>
